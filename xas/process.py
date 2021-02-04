@@ -4,12 +4,13 @@ from .file_io import (load_dataset_from_files, create_file_header, validate_file
 from .interpolate import interpolate
 
 from .xas_logger import get_logger
+from .diff_io import extract_diffraction
 from .xs3 import load_data_with_xs3
 
 from datetime import datetime
 
 
-def process_interpolate_bin(doc, db, draw_func_interp = None, draw_func_binnned = None):
+def process_interpolate_bin(doc, db, draw_func_interp = None, draw_func_binned = None, draw_func_diff = None):
 
     logger = get_logger()
 
@@ -79,6 +80,10 @@ def process_interpolate_bin(doc, db, draw_func_interp = None, draw_func_binnned 
                 save_interpolated_df_as_file(path_to_file, interpolated_df, comments)
             except:
                 logger.info(f'Interpolation failed for {path_to_file}')
+
+        elif experiment == 'diffraction':
+            image=extract_diffraction(db, uid)
+            draw_func_diff(image)
 
 
 def process_interpolate_only(doc, db):
